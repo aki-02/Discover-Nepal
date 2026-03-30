@@ -18,7 +18,8 @@
         <li><a href="./contact.html">Contact</a></li>
         <li><a href="./aboutus.html">About Us</a></li>
         <li><a href="./Booking.html">Book Now</a></li>
-        <li><a href="./login.html">Log In</a></li>
+        <li><a href="./wishlist.html">Wishlist</a></li>
+        <li id="auth-link-item"><a href="./login.html">Log In</a></li>
       </ul>
     </nav>
 </header>
@@ -57,22 +58,7 @@
     </div>
 </section>
 
-<script>
-    // Toggle between login and signup sections
-    document.getElementById('show-signup').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('signup-section').style.display = 'block';
-    });
-
-    document.getElementById('show-login').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('login-section').style.display = 'block';
-        document.getElementById('signup-section').style.display = 'none';
-    });
-</script>
-
-<script src="./script.js"></script>
 <script src="./auth-system.js"></script>
+<script src="./script.js"></script>
 </body>
 </html>

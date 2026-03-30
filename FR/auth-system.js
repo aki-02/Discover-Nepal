@@ -2,35 +2,68 @@
 
 const API_URL = 'http://localhost:5000/api';
 
+// Test localStorage availability
+function isLocalStorageAvailable() {
+    try {
+        const test = '__test__';
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+    } catch (e) {
+        console.error('localStorage not available:', e);
+        return false;
+    }
+}
+
+if (!isLocalStorageAvailable()) {
+    console.error('WARNING: localStorage is not available! Session persistence will not work.');
+}
+
 class AuthSystem {
     constructor() {
         this.currentUser = null;
+        this.storageKey = 'discoverNepal_user';
+        // Load user immediately on initialization
         this.loadUserFromStorage();
+        console.log('AuthSystem initialized. Current user:', this.currentUser);
     }
 
     // Load user from localStorage
     loadUserFromStorage() {
-        const storedUser = localStorage.getItem('discoverNepal_user');
-        if (storedUser) {
-            try {
+        try {
+            const storedUser = localStorage.getItem(this.storageKey);
+            console.log('Loading from storage:', storedUser);
+            if (storedUser) {
                 this.currentUser = JSON.parse(storedUser);
-            } catch (e) {
-                console.error('Error parsing stored user:', e);
-                localStorage.removeItem('discoverNepal_user');
+                console.log('User loaded from storage:', this.currentUser);
             }
+        } catch (e) {
+            console.error('Error loading stored user:', e);
+            localStorage.removeItem(this.storageKey);
+            this.currentUser = null;
         }
     }
 
     // Save user to localStorage
     saveUserToStorage(user) {
-        localStorage.setItem('discoverNepal_user', JSON.stringify(user));
-        this.currentUser = user;
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(user));
+            this.currentUser = user;
+            console.log('User saved to storage:', user);
+        } catch (e) {
+            console.error('Error saving user to storage:', e);
+        }
     }
 
     // Clear user from localStorage
     clearUserFromStorage() {
-        localStorage.removeItem('discoverNepal_user');
-        this.currentUser = null;
+        try {
+            localStorage.removeItem(this.storageKey);
+            this.currentUser = null;
+            console.log('User cleared from storage');
+        } catch (e) {
+            console.error('Error clearing storage:', e);
+        }
     }
 
     // Show notification
@@ -172,7 +205,15 @@ class AuthSystem {
     logout() {
         this.clearUserFromStorage();
         this.showNotification('Logged out successfully', 'success');
-        window.location.href = './index.html';
+        
+        // Update UI immediately
+        if (typeof updateUIForLogin === 'function') {
+            updateUIForLogin();
+        }
+        
+        setTimeout(() => {
+            window.location.href = './index.html';
+        }, 1500);
     }
 
     // Get current user
@@ -233,14 +274,96 @@ class AuthSystem {
     }
 }
 
-// Initialize auth system
+// Initialize auth system EARLY - before other scripts run
 const authSystem = new AuthSystem();
+
+console.log('Auth system initialized. User logged in:', authSystem.isLoggedIn());
+
+// Session management - ensure session persists
+window.addEventListener('beforeunload', () => {
+    if (authSystem.isLoggedIn()) {
+        console.log('Session active - user will remain logged in');
+        authSystem.saveUserToStorage(authSystem.currentUser);
+    }
+});
+
+// Re-verify session on page focus
+window.addEventListener('focus', () => {
+    authSystem.loadUserFromStorage();
+    console.log('Session verified on page focus. Logged in:', authSystem.isLoggedIn());
+    updateUIForLogin();
+});
+
+// Update UI function
+function updateUIForLogin() {
+    const isLoggedIn = authSystem.isLoggedIn();
+    const user = authSystem.getCurrentUser();
+    
+    console.log('Updating UI - Logged in:', isLoggedIn, 'User:', user ? user.name : 'none');
+    
+    // Update auth link in navbar
+    const authLinkItem = document.getElementById('auth-link-item');
+    if (authLinkItem) {
+        let authLink = authLinkItem.querySelector('a');
+        if (authLink) {
+            if (isLoggedIn && user) {
+                authLink.textContent = `Logout (${user.name})`;
+                authLink.href = '#logout';
+                authLink.onclick = (e) => {
+                    e.preventDefault();
+                    authSystem.logout();
+                    return false;
+                };
+                authLink.style.color = '#27ae60';
+                authLink.style.fontWeight = 'bold';
+            } else {
+                authLink.textContent = 'Log In';
+                authLink.href = './login.html';
+                authLink.onclick = null;
+                authLink.style.color = '';
+                authLink.style.fontWeight = '';
+            }
+        }
+    }
+    
+    // Add admin link if logged in
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks && isLoggedIn && user) {
+        let adminLinkItem = document.getElementById('admin-link-item');
+        if (!adminLinkItem) {
+            adminLinkItem = document.createElement('li');
+            adminLinkItem.id = 'admin-link-item';
+            const adminLink = document.createElement('a');
+            adminLink.href = './admin.html';
+            adminLink.textContent = 'Admin Panel';
+            adminLink.style.color = '#f59e0b';
+            adminLink.style.fontWeight = 'bold';
+            adminLinkItem.appendChild(adminLink);
+            navLinks.insertBefore(adminLinkItem, authLinkItem);
+        }
+    } else if (navLinks) {
+        const adminLinkItem = document.getElementById('admin-link-item');
+        if (adminLinkItem) {
+            adminLinkItem.remove();
+        }
+    }
+    
+    console.log('UI updated successfully');
+}
 
 // Initialize on page load for login page
 document.addEventListener('DOMContentLoaded', () => {
+    // Update UI immediately on load
+    updateUIForLogin();
     // Handle login form
     const loginForm = document.querySelector('.login-form');
     if (loginForm && loginForm.closest('section.login')) {
+        // Prevent form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            return false;
+        });
+
         const emailInput = loginForm.querySelector('input[name="email"]');
         const passwordInput = loginForm.querySelector('input[name="password"]');
         const loginButton = loginForm.querySelector('button[type="submit"]');
@@ -248,14 +371,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loginButton) {
             loginButton.addEventListener('click', async (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                
                 const email = emailInput.value;
                 const password = passwordInput.value;
 
+                console.log('Login attempt:', email);
                 const success = await authSystem.login(email, password);
+                
                 if (success) {
-                    setTimeout(() => {
-                        window.location.href = './index.html';
-                    }, 1500);
+                    // Verify data was saved to localStorage before redirecting
+                    const savedUser = localStorage.getItem('discoverNepal_user');
+                    console.log('User saved to localStorage:', savedUser ? 'YES' : 'NO');
+                    
+                    if (savedUser) {
+                        console.log('Login successful! Redirecting to home page...');
+                        // Clear password fields
+                        emailInput.value = '';
+                        passwordInput.value = '';
+                        // Redirect to home page after brief delay
+                        setTimeout(() => {
+                            window.location.href = './index.html';
+                        }, 1000);
+                    } else {
+                        authSystem.showNotification('Error: Could not save login. Please try again.', 'error');
+                    }
+                } else {
+                    console.log('Login failed');
                 }
             });
         }
@@ -264,6 +406,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle signup form
     const signupForm = document.querySelector('.signup-form');
     if (signupForm) {
+        // Prevent form submission
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            return false;
+        });
+
         const nameInput = signupForm.querySelector('input[name="name"]');
         const emailInput = signupForm.querySelector('input[name="email"]');
         const passwordInput = signupForm.querySelector('input[name="password"]');
@@ -273,18 +421,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (signupButton) {
             signupButton.addEventListener('click', async (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                
                 const name = nameInput.value;
                 const email = emailInput.value;
                 const password = passwordInput.value;
                 const confirmPassword = confirmInput.value;
 
+                console.log('Signup attempt:', email);
                 const success = await authSystem.signup(name, email, password, confirmPassword);
+                
                 if (success) {
                     // Clear form
                     signupForm.reset();
                     // Switch to login after 2 seconds
                     setTimeout(() => {
-                        document.getElementById('show-login').click();
+                        const loginLink = document.getElementById('show-login');
+                        if (loginLink) {
+                            loginLink.click();
+                        }
                     }, 2000);
                 }
             });

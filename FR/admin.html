@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Discover Nepal</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Admin Panel</h1>
+                <p class="sidebar-subtitle">Discover Nepal</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#users" class="nav-item" data-section="users">
+                    <span class="nav-icon">👥</span>
+                    <span>Users</span>
+                </a>
+                <a href="#settings" class="nav-item" data-section="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="logout-btn" id="logoutBtn">
+                    <span class="logout-icon">🚪</span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h2 class="page-title">Dashboard</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="admin-info">
+                        <span class="admin-name" id="adminName">Admin</span>
+                        <span class="admin-role">Administrator</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="content-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon users-icon">👥</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Total Users</p>
+                                <p class="stat-value" id="totalUsers">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon active-icon">✅</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Active Users</p>
+                                <p class="stat-value" id="activeUsers">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon today-icon">📅</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Joined Today</p>
+                                <p class="stat-value" id="todayJoined">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon system-icon">⚡</div>
+                            <div class="stat-content">
+                                <p class="stat-label">System Status</p>
+                                <p class="stat-value status-online">Online</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Users</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="recent-users-list" id="recentUsersList">
+                                    <p class="loading">Loading recent users...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Quick Actions</h3>
+                            </div>
+                            <div class="card-content quick-actions">
+                                <button class="quick-action-btn" id="addUserQuick">
+                                    <span class="action-emoji">➕</span>
+                                    <span>Add User</span>
+                                </button>
+                                <button class="quick-action-btn" id="viewAllUsers">
+                                    <span class="action-emoji">📋</span>
+                                    <span>View All Users</span>
+                                </button>
+                                <button class="quick-action-btn" id="backupData">
+                                    <span class="action-emoji">💾</span>
+                                    <span>Backup Data</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users Section -->
+                <section id="users" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">User Management</h3>
+                            <button class="btn btn-primary" id="addUserBtn">
+                                <span>+ Add User</span>
+                            </button>
+                        </div>
+                        <div class="card-content">
+                            <div class="search-filter">
+                                <input type="text" id="searchUsers" class="search-input" placeholder="Search users by name or email...">
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Joined</th>
+                                            <th>Last Login</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <tr>
+                                            <td colspan="5" class="text-center loading">Loading users...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Settings</h3>
+                        </div>
+                        <div class="card-content settings-form">
+                            <div class="settings-group">
+                                <h4>Application Settings</h4>
+                                <div class="form-group">
+                                    <label for="appName">Application Name</label>
+                                    <input type="text" id="appName" class="input" value="Discover Nepal" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="appVersion">Version</label>
+                                    <input type="text" id="appVersion" class="input" value="1.0.0" disabled>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>System Information</h4>
+                                <div class="form-group">
+                                    <label>Database</label>
+                                    <input type="text" class="input" value="SQLite - users.db" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>API Endpoint</label>
+                                    <input type="text" class="input" value="http://localhost:5000" disabled>
+                                </div>
+                            </div>
+
+                            <div class="settings-group">
+                                <h4>Admin Actions</h4>
+                                <button class="btn btn-secondary" id="clearCache">Clear Cache</button>
+                                <button class="btn btn-danger" id="resetData" style="margin-left: 10px;">Reset All Data</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add/Edit User Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add User</h3>
+                <button class="modal-close" id="closeUserModal">&times;</button>
+            </div>
+            <form id="userForm" class="modal-form">
+                <div class="form-group">
+                    <label for="userName">Full Name</label>
+                    <input type="text" id="userName" class="input" placeholder="Enter user name" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" class="input" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Password</label>
+                    <input type="password" id="userPassword" class="input" placeholder="Enter password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelUserForm">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content confirm-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirm Delete</h3>
+            </div>
+            <p class="confirm-text" id="confirmText">Are you sure you want to delete this user?</p>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelDelete">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script src="auth-system.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
