@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Wishlist - Discover Nepal</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./wishlist-style.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <h1 class="logo">
+            <a href="index.html">Discover Nepal</a>
+        </h1>
+        <ul class="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./destinations.html">Destinations</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="./aboutus.html">About Us</a></li>
+            <li><a href="./Booking.html">Book Now</a></li>
+            <li><a href="./wishlist.html">Wishlist</a></li>
+            <li><a href="./login.html">Log In</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="wishlist-section">
+    <div class="wishlist-container">
+        <h2>My Wishlist</h2>
+        <p class="wishlist-subtitle">Places you want to visit in Nepal</p>
+        
+        <div class="wishlist-actions">
+            <button id="clear-wishlist-btn" class="clear-btn">Clear All</button>
+        </div>
+
+        <div id="wishlist-items" class="wishlist-items">
+            <!-- Wishlist items will be populated here by JavaScript -->
+        </div>
+
+        <div id="empty-wishlist" class="empty-wishlist">
+            <p>Your wishlist is empty</p>
+            <p>Start adding your favorite destinations!</p>
+            <a href="./destinations.html" class="btn-browse">Browse Destinations</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2024 Discover Nepal. All rights reserved.</p>
+</footer>
+
+<script src="./auth-system.js"></script>
+<script>
+    // Protect wishlist - require login
+    document.addEventListener('DOMContentLoaded', function() {
+        const authSystem = new AuthSystem();
+        
+        if (!authSystem.isLoggedIn()) {
+            // Not logged in - show message and redirect
+            alert('Please login to access your wishlist');
+            window.location.href = './login.html';
+        }
+    });
+</script>
+<script src="./wishlist.js"></script>
+</body>
+</html>

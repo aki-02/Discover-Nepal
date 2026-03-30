@@ -2,128 +2,457 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }   
     
 .navbar {
-    background-color: rgb(236, 176, 186);
+    background-color: #e8d4c4;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 50px;
-    height: 60px;
+    height: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .logo a{
     text-decoration: none;
-    font-size: 30px;
-    font-weight: bold;
-    color: black;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.logo a:hover {
+    color: #d4a574;
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 30px;
+    gap: 35px;
 }
 
 .nav-links li a {
     text-decoration: none;
-    color: black;
-    font-size: 18px;
+    color: #2c3e50;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-links li a:hover {
+    color: #d4a574;
+    border-bottom: 2px solid #d4a574;
+}
+
+/* Page Hero Section with Background */
+.page-hero {
+    height: 350px;
+    background: url(./Images/nepal.jpg) no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    margin-top: 80px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(44, 62, 80, 0.65);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.page-hero h1 {
+    font-size: 52px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.page-hero p {
+    font-size: 20px;
+    font-weight: 500;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.5px;
 }
 
 section {
     text-align: center;
-    padding: 40px;
-    
+    padding: 60px 30px;
+    background: #fff;
 }
 
+section h2 {
+    font-size: 42px;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
 
 .cards {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    gap: 25px;
 }
 
 .card {
-    width: 250px;
-    margin: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgb(147, 144, 153);
+    width: 280px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    background: white;
+    transition: all 0.35s ease;
+    border: 1px solid #e8e8e8;
 }
+
+.card:hover {
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+    transform: translateY(-8px);
+}
+
  .card a {
-    color: black;
-    text-decoration: none;}
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+    display: block;
+    padding: 15px;
+    transition: color 0.3s ease;
+}
+
+.card a:hover {
+    color: #d4a574;
+}
 
 .card img {
     width: 100%;
-    height: 130px;
+    height: 160px;
+    object-fit: cover;
+}
+
+/* Wrapper styles for contact and login sections */
+.contact-wrapper,
+.login-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.contact-wrapper h2,
+.login-wrapper h2 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 35px;
+    font-weight: 700;
+    text-align: center;
 }
 
 /* contact page form styling */
 .contact-form {
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+section.contact h2 {
+    margin-bottom: 30px;
 }
 
 .contact-form input,
 .contact-form textarea {
-    padding: 10px;
+    padding: 14px 16px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: #d4a574;
+    box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
 }
 
 .contact-form button {
-    padding: 10px;
-    font-size: 18px;
+    padding: 14px 32px;
+    font-size: 17px;
+    font-weight: 600;
     border: none;
-    background: #8a84be;
+    background: #d4a574;
     color: white;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .contact-form button:hover {
-    background: #8a84be;
+    background: #c1934f;
+    box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+    transform: translateY(-2px);
+}
+
+.contact-form button:active {
+    transform: translateY(0);
 }
 
 /* login/booking page reuse same form styling */
 .login-form,
 .booking-form {
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* for smaller forms such as login */
 .login-form input,
 .booking-form input {
-    padding: 10px;
+    padding: 14px 16px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.login-form input:focus,
+.booking-form input:focus {
+    outline: none;
+    border-color: #d4a574;
+    box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
 }
 
 .login-form button,
 .booking-form button {
-    padding: 10px;
-    font-size: 18px;
+    padding: 14px 32px;
+    font-size: 17px;
+    font-weight: 600;
     border: none;
-    background: #8a84be;
+    background: #d4a574;
     color: white;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .login-form button:hover,
 .booking-form button:hover {
-    background: #8a84be;
+    background: #c1934f;
+    box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+    transform: translateY(-2px);
+}
+
+.login-form button:active,
+.booking-form button:active {
+    transform: translateY(0);
+}
+
+/* Login page specific styling */
+.no-account,
+.have-account {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.no-account a,
+.have-account a {
+    color: #d4a574;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.no-account a:hover,
+.have-account a:hover {
+    color: #c1934f;
+    text-decoration: underline;
+}
+
+.signup-form {
+    display: none;
+}
+
+#signup-section.show .signup-form {
+    display: flex;
+}
+
+.signup-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.signup-form input {
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.signup-form input:focus {
+    outline: none;
+    border-color: #d4a574;
+    box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+}
+
+.signup-form button {
+    padding: 14px 32px;
+    font-size: 17px;
+    font-weight: 600;
+    border: none;
+    background: #d4a574;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.signup-form button:hover {
+    background: #c1934f;
+    box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Card Image Container with Heart Button */
+.card-image-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-image-container img {
+    width: 100%;
+    height: 160px;
+    display: block;
+    object-fit: cover;
+}
+
+.heart-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: white;
+    border: none;
+    font-size: 22px;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.heart-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.heart-btn.active {
+    color: #e74c3c;
+}
+
+.card:hover .heart-btn {
+    background: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 15px 20px;
+        gap: 15px;
+    }
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .page-hero {
+        height: 280px;
+        margin-top: 60px;
+    }
+
+    .page-hero h1 {
+        font-size: 36px;
+        margin-bottom: 8px;
+    }
+
+    .page-hero p {
+        font-size: 16px;
+    }
+
+    section {
+        padding: 40px 20px;
+    }
+
+    section h2 {
+        font-size: 32px;
+        margin-bottom: 30px;
+    }
+
+    .cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-form,
+    .login-form,
+    .booking-form,
+    .signup-form {
+        padding: 25px;
+        gap: 15px;
+    }
 }
 
 

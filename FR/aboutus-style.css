@@ -1,0 +1,263 @@
+/* About Us Page Styles */
+
+.aboutus-hero {
+    height: 400px;
+    background: url(./Images/nepal.jpg) no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    margin-top: 80px;
+}
+
+.aboutus-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(44, 62, 80, 0.65);
+    z-index: 1;
+}
+
+.hero-overlay {
+    color: white;
+    z-index: 2;
+}
+
+.aboutus-hero h1 {
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.aboutus-hero p {
+    font-size: 22px;
+    font-weight: 500;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.5px;
+}
+
+.about-content {
+    background: #fff;
+    padding: 60px 20px;
+}
+
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.about-section {
+    margin-bottom: 60px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.about-section h2 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-weight: 700;
+    border-bottom: 3px solid #d4a574;
+    padding-bottom: 15px;
+    display: inline-block;
+}
+
+.about-section p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.feature-item {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 12px;
+    border-left: 4px solid #d4a574;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.feature-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.feature-item h3 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.feature-item p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+    text-align: left;
+}
+
+.reasons-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.reasons-list li {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+    padding: 15px 0;
+    padding-left: 40px;
+    position: relative;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.reasons-list li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #d4a574;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.reasons-list li:last-child {
+    border-bottom: none;
+}
+
+.reasons-list strong {
+    color: #2c3e50;
+}
+
+.contact-cta {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid #e8e8e8;
+    margin-top: 50px;
+}
+
+.contact-cta h2 {
+    border: none;
+    padding: 0;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.contact-cta p {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 17px;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #d4a574;
+    color: white;
+    padding: 14px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cta-button:hover {
+    background-color: #c1934f;
+    box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+    transform: translateY(-2px);
+}
+
+footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 25px 20px;
+    margin-top: 50px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .aboutus-hero {
+        height: 300px;
+        margin-top: 60px;
+    }
+
+    .aboutus-hero h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .aboutus-hero p {
+        font-size: 18px;
+    }
+
+    .about-content {
+        padding: 40px 20px;
+    }
+
+    .about-section {
+        margin-bottom: 40px;
+    }
+
+    .about-section h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .about-section p {
+        font-size: 15px;
+        text-align: left;
+    }
+
+    .features-list {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .feature-item {
+        padding: 25px;
+    }
+
+    .reasons-list li {
+        padding-left: 35px;
+        font-size: 15px;
+        padding: 12px 0;
+        padding-left: 35px;
+    }
+
+    .contact-cta {
+        padding: 30px;
+    }
+}
