@@ -326,22 +326,9 @@ function updateUIForLogin() {
         }
     }
     
-    // Add admin link if logged in
+    // Remove admin link (admin functionality disabled)
     const navLinks = document.querySelector('.nav-links');
-    if (navLinks && isLoggedIn && user) {
-        let adminLinkItem = document.getElementById('admin-link-item');
-        if (!adminLinkItem) {
-            adminLinkItem = document.createElement('li');
-            adminLinkItem.id = 'admin-link-item';
-            const adminLink = document.createElement('a');
-            adminLink.href = './admin.html';
-            adminLink.textContent = 'Admin Panel';
-            adminLink.style.color = '#f59e0b';
-            adminLink.style.fontWeight = 'bold';
-            adminLinkItem.appendChild(adminLink);
-            navLinks.insertBefore(adminLinkItem, authLinkItem);
-        }
-    } else if (navLinks) {
+    if (navLinks) {
         const adminLinkItem = document.getElementById('admin-link-item');
         if (adminLinkItem) {
             adminLinkItem.remove();

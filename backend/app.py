@@ -172,33 +172,6 @@ def change_password():
     except Exception as e:
         return jsonify({'success': False, 'message': f'Server error: {str(e)}'}), 500
 
-@app.route('/api/admin/users', methods=['GET'])
-def list_users():
-    """List all users (admin endpoint)"""
-    try:
-        users = get_all_users()
-        return jsonify({
-            'success': True,
-            'count': len(users),
-            'users': users
-        }), 200
-    except Exception as e:
-        return jsonify({'success': False, 'message': f'Server error: {str(e)}'}), 500
-
-@app.route('/api/admin/users/<email>', methods=['DELETE'])
-def delete_user_endpoint(email):
-    """Delete a user (admin endpoint)"""
-    try:
-        success, message = delete_user(email)
-        
-        if success:
-            return jsonify({'success': True, 'message': message}), 200
-        else:
-            return jsonify({'success': False, 'message': message}), 400
-    
-    except Exception as e:
-        return jsonify({'success': False, 'message': f'Server error: {str(e)}'}), 500
-
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
