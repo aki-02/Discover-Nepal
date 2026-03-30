@@ -1,0 +1,129 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}   
+    
+.navbar {
+    background-color: rgb(236, 176, 186);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    height: 60px;
+}
+
+.logo a{
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+
+section {
+    text-align: center;
+    padding: 40px;
+    
+}
+
+
+.cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 250px;
+    margin: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgb(147, 144, 153);
+}
+ .card a {
+    color: black;
+    text-decoration: none;}
+
+.card img {
+    width: 100%;
+    height: 130px;
+}
+
+/* contact page form styling */
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact-form button {
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    background: #8a84be;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.contact-form button:hover {
+    background: #8a84be;
+}
+
+/* login/booking page reuse same form styling */
+.login-form,
+.booking-form {
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* for smaller forms such as login */
+.login-form input,
+.booking-form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-form button,
+.booking-form button {
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    background: #8a84be;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.login-form button:hover,
+.booking-form button:hover {
+    background: #8a84be;
+}
+
+

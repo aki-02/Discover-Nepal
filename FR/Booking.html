@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking - Discover Nepal</title>
+    <link rel="stylesheet" href="./style2.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+    <h1 class="logo">
+        <a href="./index.html">Discover Nepal</a>
+    </h1>
+      <ul class="nav-links">
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./destinations.html">Destinations</a></li>
+        <li><a href="./contact.html">Contact</a></li>
+        <li><a href="./Booking.html">Book Now</a></li>
+        <li><a href="./login.html">Log In</a></li>
+      </ul>
+    </nav>
+</header>
+
+<section class="booking">
+    <h2>Book Your Trip!</h2>
+    <form action="/book" method="POST" class="booking-form">
+        <input type="text" name="name" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="destination" placeholder="Desired Destination" required>
+        <button type="submit">Book Now</button>
+    </form>
+</section>
+
+
+
+</body>
+</html>
