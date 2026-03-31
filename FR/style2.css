@@ -6,13 +6,18 @@
 }   
     
 .navbar {
-    background-color: #e8d4c4;
+    height: 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 50px;
-    height: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .logo a{
@@ -37,7 +42,7 @@
 .nav-links li a {
     text-decoration: none;
     color: #2c3e50;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 500;
     border-bottom: 2px solid transparent;
     padding-bottom: 5px;
@@ -96,6 +101,14 @@ section {
     text-align: center;
     padding: 60px 30px;
     background: #fff;
+}
+
+.featured {
+    margin-top: 80px;
+}
+
+.booking {
+    margin-top: 80px;
 }
 
 section h2 {
@@ -178,6 +191,14 @@ section h2 {
 
 section.contact h2 {
     margin-bottom: 30px;
+}
+
+section.contact {
+    margin-top: 80px;
+}
+
+section.login {
+    margin-top: 80px;
 }
 
 .contact-form input,

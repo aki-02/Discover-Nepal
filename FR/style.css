@@ -6,30 +6,31 @@
 }   
 
 .navbar {
+    height: 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 50px;
-    position: absolute;
+    position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .logo a{
     text-decoration: none;
     font-size: 32px;
     font-weight: 700;
-    color: white;
+    color: #2c3e50;
     letter-spacing: 1px;
     transition: color 0.3s ease;
 }
 
 .logo a:hover {
-    color: #ffd700;
+    color: #d4a574;
 }
 
 .nav-links {
@@ -40,7 +41,7 @@
 
 .nav-links li a {
     text-decoration: none;
-    color: white;
+    color: #2c3e50;
     font-size: 17px;
     font-weight: 500;
     border-bottom: 2px solid transparent;
@@ -49,8 +50,8 @@
 }
 
 .nav-links li a:hover {
-    color: #ffd700;
-    border-bottom: 2px solid #ffd700;
+    color: #d4a574;
+    border-bottom: 2px solid #d4a574;
 }
  .card a {
     color: #2c3e50;
@@ -74,6 +75,7 @@
     align-items: center;
     text-align: center;
     position: relative;
+    margin-top: 80px;
 }
 
 .hero::before {
@@ -153,7 +155,7 @@ section h2 {
         flex-direction: column;
         padding: 15px 20px;
         gap: 15px;
-        position: relative;
+        position: fixed;
     }
 
     .logo a {

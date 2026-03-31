@@ -29,62 +29,62 @@ body {
     font-family: 'Manrope', 'Segoe UI', sans-serif;
 }
 
-.admin-header {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    backdrop-filter: blur(9px);
-    background: rgba(248, 250, 252, 0.86);
-    border-bottom: 1px solid rgba(203, 213, 225, 0.9);
-}
 
 .navbar {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 18px 20px;
+    height: 90px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    align-items: center;
+    padding: 20px 50px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .logo a {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 800;
-    font-size: 28px;
-    letter-spacing: 0.2px;
+  text-decoration: none;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
 }
 
+.logo a:hover {
+    color: #d4a574;
+}
 .nav-links {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+      list-style: none;
     display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
+    gap: 35px;
 }
 
-.nav-links a {
+.nav-links li a {
     text-decoration: none;
-    color: #1e293b;
-    font-weight: 600;
+    color: #2c3e50;
+    font-size: 17px;
+    font-weight: 500;
     border-bottom: 2px solid transparent;
-    padding-bottom: 4px;
-    transition: all 0.25s ease;
+    padding-bottom: 5px;
+    transition: all 0.3s ease;
 }
 
-.nav-links a:hover {
-    border-bottom-color: var(--primary);
-    color: var(--primary);
+.nav-links li a:hover {
+    color: #d4a574;
+    border-bottom: 2px solid #d4a574;
 }
 
 .admin-shell {
     max-width: 1200px;
-    margin: 22px auto 40px;
+    margin: 150px auto 40px;
     padding: 0 20px;
     display: grid;
     gap: 16px;
+    
 }
 
 .panel,
