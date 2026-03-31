@@ -238,7 +238,8 @@ section.contact h2 {
 
 /* for smaller forms such as login */
 .login-form input,
-.booking-form input {
+.booking-form input,
+.booking-form textarea {
     padding: 14px 16px;
     font-size: 16px;
     border: 2px solid #e0e0e0;
@@ -249,10 +250,16 @@ section.contact h2 {
 }
 
 .login-form input:focus,
-.booking-form input:focus {
+.booking-form input:focus,
+.booking-form textarea:focus {
     outline: none;
     border-color: #d4a574;
     box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+}
+
+.booking-form textarea {
+    resize: vertical;
+    min-height: 110px;
 }
 
 .login-form button,

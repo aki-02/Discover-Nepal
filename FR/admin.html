@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Discover Nepal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./admin.css">
+</head>
+<body data-requires-admin="true">
+<header class="admin-header">
+    <nav class="navbar">
+        <h1 class="logo">
+            <a href="./index.html">Discover Nepal</a>
+        </h1>
+        <ul class="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./destinations.html">Destinations</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="./aboutus.html">About Us</a></li>
+            <li><a href="./Booking.html">Book Now</a></li>
+            <li id="admin-link-item"><a href="./admin.html">Admin Portal</a></li>
+            <li id="auth-link-item"><a href="./login.html">Log In</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="admin-shell">
+    <section class="hero-card">
+        <div class="hero-copy">
+            <p class="eyebrow">Control Center</p>
+            <h1>Admin Operations Console</h1>
+            <p>Shadcn-inspired management workspace for users, bookings, and content with secure JWT-backed APIs.</p>
+        </div>
+        <div class="hero-meta">
+            <span class="badge">RBAC</span>
+            <span class="badge">JWT</span>
+            <span class="badge">Live CRUD</span>
+        </div>
+    </section>
+
+    <section class="panel controls-panel">
+        <div class="tabs" id="module-tabs">
+            <button class="tab-btn active" data-tab="users" type="button">Users</button>
+            <button class="tab-btn" data-tab="bookings" type="button">Bookings</button>
+            <button class="tab-btn" data-tab="content" type="button">Content</button>
+        </div>
+
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <input id="search-input" type="search" placeholder="Search current module..." autocomplete="off">
+                <select id="status-filter" aria-label="Status Filter"></select>
+                <select id="type-filter" aria-label="Content Type Filter" class="hidden"></select>
+            </div>
+            <div class="toolbar-right">
+                <button id="refresh-btn" class="btn btn-outline" type="button">Refresh</button>
+                <button id="new-item-btn" class="btn btn-primary" type="button">New User</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel table-panel">
+        <div id="table-loading" class="loading-state hidden">
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+        </div>
+        <div id="table-wrapper"></div>
+
+        <div class="pagination">
+            <button id="prev-page-btn" class="btn btn-outline" type="button">Previous</button>
+            <span id="page-indicator">Page 1</span>
+            <button id="next-page-btn" class="btn btn-outline" type="button">Next</button>
+        </div>
+    </section>
+
+    <aside id="detail-panel" class="panel detail-panel hidden"></aside>
+</main>
+
+<div id="dialog-overlay" class="dialog-overlay hidden" aria-hidden="true">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+        <div class="dialog-header">
+            <h2 id="dialog-title">Create</h2>
+            <button id="dialog-close" class="icon-btn" type="button" aria-label="Close dialog">X</button>
+        </div>
+        <form id="dialog-form" class="dialog-form"></form>
+        <div class="dialog-footer">
+            <button id="dialog-cancel" class="btn btn-outline" type="button">Cancel</button>
+            <button id="dialog-submit" class="btn btn-primary" type="button">Save</button>
+        </div>
+    </div>
+</div>
+
+<script src="./auth-system.js"></script>
+<script src="./admin.js"></script>
+</body>
+</html>

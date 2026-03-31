@@ -18,6 +18,7 @@
         <li><a href="./contact.html">Contact</a></li>
         <li><a href="./aboutus.html">About Us</a></li>
         <li><a href="./Booking.html">Book Now</a></li>
+                <li id="admin-link-item" style="display: none;"><a href="./admin.html">Admin Portal</a></li>
         <li id="auth-link-item"><a href="./login.html">Log In</a></li>
       </ul>
     </nav>
@@ -25,10 +26,13 @@
 
 <section class="booking">
     <h2>Book Your Trip!</h2>
-    <form action="/book" method="POST" class="booking-form">
+        <form class="booking-form">
         <input type="text" name="name" placeholder="Full Name" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="text" name="destination" placeholder="Desired Destination" required>
+                <input type="date" name="travel_date" placeholder="Travel Date">
+                <input type="number" name="travelers" min="1" max="20" value="1" placeholder="Number of Travelers" required>
+                <textarea name="notes" rows="4" placeholder="Special requests (optional)"></textarea>
         <button type="submit">Book Now</button>
     </form>
 </section>

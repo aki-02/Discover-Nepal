@@ -1,72 +1,88 @@
-// Login and Signup System Handler
+// Login, Session, Booking, and Admin API Handler
 
 const API_URL = 'http://localhost:5000/api';
 
-// Test localStorage availability
 function isLocalStorageAvailable() {
     try {
         const test = '__test__';
         localStorage.setItem(test, test);
         localStorage.removeItem(test);
         return true;
-    } catch (e) {
-        console.error('localStorage not available:', e);
+    } catch (error) {
+        console.error('localStorage not available:', error);
         return false;
     }
 }
 
+function getPathPrefix() {
+    const normalizedPath = window.location.pathname.replace(/\\/g, '/');
+    return normalizedPath.includes('/Paragraph/') ? '..' : '.';
+}
+
+function getAdminHref() {
+    return `${getPathPrefix()}/admin.html`;
+}
+
+function getLoginHref() {
+    return `${getPathPrefix()}/login.html`;
+}
+
+function getHomeHref() {
+    return `${getPathPrefix()}/index.html`;
+}
+
 if (!isLocalStorageAvailable()) {
-    console.error('WARNING: localStorage is not available! Session persistence will not work.');
+    console.error('WARNING: localStorage is not available. Session persistence will not work.');
 }
 
 class AuthSystem {
     constructor() {
         this.currentUser = null;
-        this.storageKey = 'discoverNepal_user';
-        // Load user immediately on initialization
-        this.loadUserFromStorage();
-        console.log('AuthSystem initialized. Current user:', this.currentUser);
+        this.token = null;
+        this.userStorageKey = 'discoverNepal_user';
+        this.tokenStorageKey = 'discoverNepal_token';
+        this.loadSession();
     }
 
-    // Load user from localStorage
-    loadUserFromStorage() {
+    loadSession() {
         try {
-            const storedUser = localStorage.getItem(this.storageKey);
-            console.log('Loading from storage:', storedUser);
-            if (storedUser) {
-                this.currentUser = JSON.parse(storedUser);
-                console.log('User loaded from storage:', this.currentUser);
+            const storedUser = localStorage.getItem(this.userStorageKey);
+            const storedToken = localStorage.getItem(this.tokenStorageKey);
+
+            this.currentUser = storedUser ? JSON.parse(storedUser) : null;
+            this.token = storedToken || null;
+
+            if (this.currentUser && !this.token) {
+                this.clearSession();
             }
-        } catch (e) {
-            console.error('Error loading stored user:', e);
-            localStorage.removeItem(this.storageKey);
-            this.currentUser = null;
+        } catch (error) {
+            console.error('Error loading stored session:', error);
+            this.clearSession();
         }
     }
 
-    // Save user to localStorage
-    saveUserToStorage(user) {
+    saveSession(user, token) {
         try {
-            localStorage.setItem(this.storageKey, JSON.stringify(user));
             this.currentUser = user;
-            console.log('User saved to storage:', user);
-        } catch (e) {
-            console.error('Error saving user to storage:', e);
+            this.token = token;
+            localStorage.setItem(this.userStorageKey, JSON.stringify(user));
+            localStorage.setItem(this.tokenStorageKey, token);
+        } catch (error) {
+            console.error('Error saving session:', error);
         }
     }
 
-    // Clear user from localStorage
-    clearUserFromStorage() {
+    clearSession() {
         try {
-            localStorage.removeItem(this.storageKey);
             this.currentUser = null;
-            console.log('User cleared from storage');
-        } catch (e) {
-            console.error('Error clearing storage:', e);
+            this.token = null;
+            localStorage.removeItem(this.userStorageKey);
+            localStorage.removeItem(this.tokenStorageKey);
+        } catch (error) {
+            console.error('Error clearing session:', error);
         }
     }
 
-    // Show notification
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `auth-notification ${type}`;
@@ -76,38 +92,96 @@ class AuthSystem {
             top: 20px;
             right: 20px;
             padding: 16px 24px;
-            background-color: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'};
+            background-color: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#0ea5e9'};
             color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             z-index: 1000;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
         `;
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.style.opacity = '0';
             notification.style.transition = 'opacity 0.3s ease';
             setTimeout(() => notification.remove(), 300);
-        }, 3000);
+        }, 3200);
     }
 
-    // Validate email
     validateEmail(email) {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(email);
+        return emailRegex.test((email || '').trim());
     }
 
-    // Validate password
     validatePassword(password) {
-        return password.length >= 6;
+        return (password || '').length >= 6;
     }
 
-    // Sign Up
+    getCurrentUser() {
+        return this.currentUser;
+    }
+
+    getToken() {
+        return this.token;
+    }
+
+    isLoggedIn() {
+        return Boolean(this.currentUser && this.token);
+    }
+
+    isAdmin() {
+        return this.isLoggedIn() && this.currentUser.role === 'admin';
+    }
+
+    async request(path, options = {}) {
+        const method = options.method || 'GET';
+        const body = options.body ?? null;
+        const auth = options.auth || false;
+
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        if (auth) {
+            if (!this.token) {
+                throw new Error('You must be logged in to perform this action');
+            }
+            headers.Authorization = `Bearer ${this.token}`;
+        }
+
+        const requestOptions = {
+            method,
+            headers,
+        };
+
+        if (body !== null) {
+            requestOptions.body = JSON.stringify(body);
+        }
+
+        const response = await fetch(`${API_URL}${path}`, requestOptions);
+        let data = {};
+
+        try {
+            data = await response.json();
+        } catch (error) {
+            data = {};
+        }
+
+        if (!response.ok) {
+            const message = data.message || `Request failed with status ${response.status}`;
+            if (auth && response.status === 401) {
+                this.clearSession();
+                updateUIForLogin();
+            }
+            throw new Error(message);
+        }
+
+        return data;
+    }
+
     async signup(name, email, password, confirmPassword) {
         try {
-            // Validation
             if (!name || !email || !password || !confirmPassword) {
                 this.showNotification('All fields are required', 'error');
                 return false;
@@ -128,40 +202,32 @@ class AuthSystem {
                 return false;
             }
 
-            // API Call
-            const response = await fetch(`${API_URL}/auth/signup`, {
+            const data = await this.request('/auth/signup', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+                body: {
                     name: name.trim(),
-                    email: email.trim(),
-                    password: password,
-                    confirm_password: confirmPassword
-                })
+                    email: email.trim().toLowerCase(),
+                    password,
+                    confirm_password: confirmPassword,
+                },
             });
 
-            const data = await response.json();
-
             if (data.success) {
-                this.showNotification('Account created successfully! Please login.', 'success');
+                this.showNotification('Account created successfully. Please log in.', 'success');
                 return true;
-            } else {
-                this.showNotification(data.message || 'Signup failed', 'error');
-                return false;
             }
+
+            this.showNotification(data.message || 'Signup failed', 'error');
+            return false;
         } catch (error) {
             console.error('Signup error:', error);
-            this.showNotification('Network error. Please check if the server is running.', 'error');
+            this.showNotification(error.message || 'Network error. Check if server is running.', 'error');
             return false;
         }
     }
 
-    // Login
     async login(email, password) {
         try {
-            // Validation
             if (!email || !password) {
                 this.showNotification('Email and password are required', 'error');
                 return false;
@@ -172,65 +238,46 @@ class AuthSystem {
                 return false;
             }
 
-            // API Call
-            const response = await fetch(`${API_URL}/auth/login`, {
+            const data = await this.request('/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+                body: {
+                    email: email.trim().toLowerCase(),
+                    password,
                 },
-                body: JSON.stringify({
-                    email: email.trim(),
-                    password: password
-                })
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                this.saveUserToStorage(data.user);
+            if (data.success && data.user && data.token) {
+                this.saveSession(data.user, data.token);
                 this.showNotification(`Welcome back, ${data.user.name}!`, 'success');
                 return true;
-            } else {
-                this.showNotification(data.message || 'Login failed', 'error');
-                return false;
             }
+
+            this.showNotification(data.message || 'Login failed', 'error');
+            return false;
         } catch (error) {
             console.error('Login error:', error);
-            this.showNotification('Network error. Please check if the server is running.', 'error');
+            this.showNotification(error.message || 'Network error. Check if server is running.', 'error');
             return false;
         }
     }
 
-    // Logout
     logout() {
-        this.clearUserFromStorage();
+        this.clearSession();
         this.showNotification('Logged out successfully', 'success');
-        
-        // Update UI immediately
+
         if (typeof updateUIForLogin === 'function') {
             updateUIForLogin();
         }
-        
+
         setTimeout(() => {
-            window.location.href = './index.html';
-        }, 1500);
+            window.location.href = getHomeHref();
+        }, 1000);
     }
 
-    // Get current user
-    getCurrentUser() {
-        return this.currentUser;
-    }
-
-    // Check if user is logged in
-    isLoggedIn() {
-        return this.currentUser !== null;
-    }
-
-    // Change password
     async changePassword(email, oldPassword, newPassword, confirmPassword) {
         try {
-            if (!oldPassword || !newPassword || !confirmPassword) {
-                this.showNotification('All fields are required', 'error');
+            if (!newPassword || !confirmPassword) {
+                this.showNotification('All password fields are required', 'error');
                 return false;
             }
 
@@ -244,192 +291,235 @@ class AuthSystem {
                 return false;
             }
 
-            const response = await fetch(`${API_URL}/auth/change-password`, {
+            const payload = {
+                email: (email || '').trim().toLowerCase(),
+                old_password: oldPassword || '',
+                new_password: newPassword,
+                confirm_password: confirmPassword,
+            };
+
+            const data = await this.request('/auth/change-password', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    old_password: oldPassword,
-                    new_password: newPassword,
-                    confirm_password: confirmPassword
-                })
+                body: payload,
+                auth: true,
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                this.showNotification('Password changed successfully', 'success');
-                return true;
-            } else {
-                this.showNotification(data.message || 'Password change failed', 'error');
-                return false;
-            }
+            this.showNotification(data.message || 'Password changed successfully', 'success');
+            return true;
         } catch (error) {
             console.error('Change password error:', error);
-            this.showNotification('Network error', 'error');
+            this.showNotification(error.message || 'Password change failed', 'error');
             return false;
         }
     }
+
+    async submitBooking(payload) {
+        try {
+            const bookingPayload = {
+                name: (payload.name || '').trim(),
+                email: (payload.email || '').trim().toLowerCase(),
+                destination: (payload.destination || '').trim(),
+                travel_date: payload.travel_date || null,
+                travelers: Number(payload.travelers || 1),
+                notes: (payload.notes || '').trim(),
+            };
+
+            if (!bookingPayload.name || !bookingPayload.email || !bookingPayload.destination) {
+                this.showNotification('Name, email, and destination are required', 'error');
+                return false;
+            }
+
+            if (!this.validateEmail(bookingPayload.email)) {
+                this.showNotification('Please enter a valid email address', 'error');
+                return false;
+            }
+
+            const data = await this.request('/bookings', {
+                method: 'POST',
+                body: bookingPayload,
+            });
+
+            this.showNotification(data.message || 'Booking submitted successfully', 'success');
+            return true;
+        } catch (error) {
+            console.error('Booking submission error:', error);
+            this.showNotification(error.message || 'Booking failed', 'error');
+            return false;
+        }
+    }
+
+    async adminRequest(path, options = {}) {
+        if (!this.isAdmin()) {
+            throw new Error('Admin access required');
+        }
+
+        return this.request(path, {
+            ...options,
+            auth: true,
+        });
+    }
 }
 
-// Initialize auth system EARLY - before other scripts run
 const authSystem = new AuthSystem();
+window.AuthSystem = AuthSystem;
+window.authSystem = authSystem;
 
-console.log('Auth system initialized. User logged in:', authSystem.isLoggedIn());
-
-// Session management - ensure session persists
 window.addEventListener('beforeunload', () => {
     if (authSystem.isLoggedIn()) {
-        console.log('Session active - user will remain logged in');
-        authSystem.saveUserToStorage(authSystem.currentUser);
+        authSystem.saveSession(authSystem.currentUser, authSystem.token);
     }
 });
 
-// Re-verify session on page focus
 window.addEventListener('focus', () => {
-    authSystem.loadUserFromStorage();
-    console.log('Session verified on page focus. Logged in:', authSystem.isLoggedIn());
+    authSystem.loadSession();
     updateUIForLogin();
 });
 
-// Update UI function
 function updateUIForLogin() {
-    const isLoggedIn = authSystem.isLoggedIn();
     const user = authSystem.getCurrentUser();
-    
-    console.log('Updating UI - Logged in:', isLoggedIn, 'User:', user ? user.name : 'none');
-    
-    // Update auth link in navbar
+    const isLoggedIn = authSystem.isLoggedIn();
+    const navLinks = document.querySelector('.nav-links');
     const authLinkItem = document.getElementById('auth-link-item');
+
     if (authLinkItem) {
-        let authLink = authLinkItem.querySelector('a');
+        const authLink = authLinkItem.querySelector('a');
         if (authLink) {
             if (isLoggedIn && user) {
                 authLink.textContent = `Logout (${user.name})`;
                 authLink.href = '#logout';
-                authLink.onclick = (e) => {
-                    e.preventDefault();
+                authLink.onclick = (event) => {
+                    event.preventDefault();
                     authSystem.logout();
                     return false;
                 };
-                authLink.style.color = '#27ae60';
-                authLink.style.fontWeight = 'bold';
+                authLink.style.color = '#16a34a';
+                authLink.style.fontWeight = '700';
             } else {
                 authLink.textContent = 'Log In';
-                authLink.href = './login.html';
+                authLink.href = getLoginHref();
                 authLink.onclick = null;
                 authLink.style.color = '';
                 authLink.style.fontWeight = '';
             }
         }
     }
-    
-    // Remove admin link (admin functionality disabled)
-    const navLinks = document.querySelector('.nav-links');
+
     if (navLinks) {
-        const adminLinkItem = document.getElementById('admin-link-item');
-        if (adminLinkItem) {
-            adminLinkItem.remove();
+        let adminLinkItem = document.getElementById('admin-link-item');
+
+        if (isLoggedIn && authSystem.isAdmin()) {
+            if (!adminLinkItem) {
+                adminLinkItem = document.createElement('li');
+                adminLinkItem.id = 'admin-link-item';
+                const adminLink = document.createElement('a');
+                adminLink.textContent = 'Admin Portal';
+                adminLink.href = getAdminHref();
+                adminLinkItem.appendChild(adminLink);
+
+                if (authLinkItem) {
+                    navLinks.insertBefore(adminLinkItem, authLinkItem);
+                } else {
+                    navLinks.appendChild(adminLinkItem);
+                }
+            }
+
+            const adminLink = adminLinkItem.querySelector('a');
+            if (adminLink) {
+                adminLink.href = getAdminHref();
+                adminLink.textContent = 'Admin Portal';
+            }
+            adminLinkItem.style.display = 'list-item';
+        } else if (adminLinkItem) {
+            adminLinkItem.style.display = 'none';
         }
     }
-    
-    console.log('UI updated successfully');
 }
 
-// Initialize on page load for login page
 document.addEventListener('DOMContentLoaded', () => {
-    // Update UI immediately on load
     updateUIForLogin();
-    // Handle login form
-    const loginForm = document.querySelector('.login-form');
-    if (loginForm && loginForm.closest('section.login')) {
-        // Prevent form submission
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            return false;
-        });
 
-        const emailInput = loginForm.querySelector('input[name="email"]');
-        const passwordInput = loginForm.querySelector('input[name="password"]');
-        const loginButton = loginForm.querySelector('button[type="submit"]');
-
-        if (loginButton) {
-            loginButton.addEventListener('click', async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const email = emailInput.value;
-                const password = passwordInput.value;
-
-                console.log('Login attempt:', email);
-                const success = await authSystem.login(email, password);
-                
-                if (success) {
-                    // Verify data was saved to localStorage before redirecting
-                    const savedUser = localStorage.getItem('discoverNepal_user');
-                    console.log('User saved to localStorage:', savedUser ? 'YES' : 'NO');
-                    
-                    if (savedUser) {
-                        console.log('Login successful! Redirecting to home page...');
-                        // Clear password fields
-                        emailInput.value = '';
-                        passwordInput.value = '';
-                        // Redirect to home page after brief delay
-                        setTimeout(() => {
-                            window.location.href = './index.html';
-                        }, 1000);
-                    } else {
-                        authSystem.showNotification('Error: Could not save login. Please try again.', 'error');
-                    }
-                } else {
-                    console.log('Login failed');
-                }
-            });
-        }
+    const requiresAdmin = document.body.getAttribute('data-requires-admin') === 'true';
+    if (requiresAdmin && !authSystem.isAdmin()) {
+        authSystem.showNotification('Admin access required', 'error');
+        setTimeout(() => {
+            window.location.href = getLoginHref();
+        }, 1000);
+        return;
     }
 
-    // Handle signup form
+    const loginForm = document.querySelector('.login-form');
+    if (loginForm && loginForm.closest('section.login')) {
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const emailInput = loginForm.querySelector('input[name="email"]');
+            const passwordInput = loginForm.querySelector('input[name="password"]');
+            const email = emailInput ? emailInput.value : '';
+            const password = passwordInput ? passwordInput.value : '';
+
+            const success = await authSystem.login(email, password);
+            if (success) {
+                loginForm.reset();
+                updateUIForLogin();
+                setTimeout(() => {
+                    window.location.href = getHomeHref();
+                }, 700);
+            }
+        });
+    }
+
     const signupForm = document.querySelector('.signup-form');
     if (signupForm) {
-        // Prevent form submission
-        signupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            return false;
+        signupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const nameInput = signupForm.querySelector('input[name="name"]');
+            const emailInput = signupForm.querySelector('input[name="email"]');
+            const passwordInput = signupForm.querySelector('input[name="password"]');
+            const confirmInput = signupForm.querySelector('input[name="confirm"]');
+
+            const success = await authSystem.signup(
+                nameInput ? nameInput.value : '',
+                emailInput ? emailInput.value : '',
+                passwordInput ? passwordInput.value : '',
+                confirmInput ? confirmInput.value : ''
+            );
+
+            if (success) {
+                signupForm.reset();
+                setTimeout(() => {
+                    const showLogin = document.getElementById('show-login');
+                    if (showLogin) {
+                        showLogin.click();
+                    }
+                }, 1200);
+            }
         });
+    }
 
-        const nameInput = signupForm.querySelector('input[name="name"]');
-        const emailInput = signupForm.querySelector('input[name="email"]');
-        const passwordInput = signupForm.querySelector('input[name="password"]');
-        const confirmInput = signupForm.querySelector('input[name="confirm"]');
-        const signupButton = signupForm.querySelector('button[type="submit"]');
+    const bookingForm = document.querySelector('.booking-form');
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-        if (signupButton) {
-            signupButton.addEventListener('click', async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const name = nameInput.value;
-                const email = emailInput.value;
-                const password = passwordInput.value;
-                const confirmPassword = confirmInput.value;
+            const formData = new FormData(bookingForm);
+            const payload = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                destination: formData.get('destination'),
+                travel_date: formData.get('travel_date'),
+                travelers: formData.get('travelers'),
+                notes: formData.get('notes'),
+            };
 
-                console.log('Signup attempt:', email);
-                const success = await authSystem.signup(name, email, password, confirmPassword);
-                
-                if (success) {
-                    // Clear form
-                    signupForm.reset();
-                    // Switch to login after 2 seconds
-                    setTimeout(() => {
-                        const loginLink = document.getElementById('show-login');
-                        if (loginLink) {
-                            loginLink.click();
-                        }
-                    }, 2000);
+            const success = await authSystem.submitBooking(payload);
+            if (success) {
+                bookingForm.reset();
+                const travelerInput = bookingForm.querySelector('input[name="travelers"]');
+                if (travelerInput) {
+                    travelerInput.value = '1';
                 }
-            });
-        }
+            }
+        });
     }
 });
